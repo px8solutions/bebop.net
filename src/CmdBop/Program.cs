@@ -142,12 +142,15 @@ namespace CmdBop
                             byte high = _ram[_programCounter + 1];
                             byte low = _ram[_programCounter + 2];
 
-                            byte address = low;
+                            byte higher = _ram[high + 1];
+                            byte lower = _ram[high + 2];
 
-                            byte higher = _ram[low];
-                            byte lower = _ram[low + 1];
+                            _accumulator = lower;
 
-                            _accumulator = _ram[lower];
+                            //byte higher = _ram[low];
+                            //byte lower = _ram[low + 1];
+
+                            //_accumulator = _ram[lower];
 
                             _programCounter += 3;
                         }
@@ -183,11 +186,9 @@ namespace CmdBop
                             byte high = _ram[_programCounter + 1];
                             byte low = _ram[_programCounter + 2];
 
-                            byte address = low;
-
                             byte higher = _ram[low];
                             byte lower = _ram[low + 1];
-
+                           
                             _ram[lower] = _accumulator;
 
                             _programCounter += 3;
