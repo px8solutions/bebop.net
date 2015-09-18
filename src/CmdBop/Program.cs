@@ -19,8 +19,8 @@ namespace CmdBop
         {
             //LDA [[$0020]]
             _ram[0x00] = 0x93;
-            _ram[0x01] = 0x00;
-            _ram[0x02] = 0x20;
+            _ram[0x01] = 0xFF;
+            _ram[0x02] = 0x00;
 
             //INCA
             _ram[0x03] = 0x80;
@@ -30,8 +30,8 @@ namespace CmdBop
 
             //STA [[$0021]]
             _ram[0x07] = 0x9B;
-            _ram[0x08] = 0x00;
-            _ram[0x09] = 0x22;
+            _ram[0x08] = 0xFF;
+            _ram[0x09] = 0x02;
 
             //HLT
             _ram[0x0F] = 0x01;
@@ -40,12 +40,12 @@ namespace CmdBop
             //DATA (starts at FF00)
 
             //contains the address of the initial place (0x30)
-            _ram[0xFF00] = 0x00;
-            _ram[0xFF01] = 0x30;
+            _ram[0xFF00] = 0xFF;
+            _ram[0xFF01] = 0x0A;
 
             //contains the address of the final place (0x31)
-            _ram[0xFF02] = 0x00;
-            _ram[0xFF03] = 0x31;
+            _ram[0xFF02] = 0xFF;
+            _ram[0xFF03] = 0x0B;
 
             //place where the initial value can be found
             _ram[0xFF0A] = 0x24;
