@@ -15,10 +15,10 @@ namespace CmdBop
         static byte instructionRegister = 0;
         static byte[] ram = new byte[65536];
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            //LDA $0020
-            ram[0x00] = 0x91;
+            //LDA [[$0020]]
+            ram[0x00] = 0x93;
             ram[0x01] = 0x00;
             ram[0x02] = 0x20;
 
@@ -28,27 +28,30 @@ namespace CmdBop
             ram[0x05] = 0x80;
             ram[0x06] = 0x80;
 
-            //STA [$0021]
+            //STA [[$0021]]
             ram[0x07] = 0x9B;
             ram[0x08] = 0x00;
-            ram[0x09] = 0x30;
+            ram[0x09] = 0x21;
 
             //HLT
             ram[0x0F] = 0x01;
 
+            //===========================================================================
+            //DATA
 
-            //data
+            //contains the address of the initial place (0x30)
+            ram[0x20] = 0x00;
+            ram[0x21] = 0x30;
 
-            //contains data to be loaded into accumulator
-            ram[0x20] = 0x24; 
+            //contains the address of the final place (0x31)
+            ram[0x22] = 0x00;
+            ram[0x23] = 0x31;
 
-            //contains the address of the final place (0x30)
-            ram[0x21] = 0x00;
-            ram[0x22] = 0x30;
+            //place where the initial value can be found
+            ram[0x30] = 0x24;
 
             //place where the final result goes    
-            ram[0x30] = 0x00;
-            ram[0x31] = 0x38; 
+            ram[0x31] = 0xFF;
 
             while (true)
             {
@@ -60,60 +63,69 @@ namespace CmdBop
                 Console.WriteLine("------------------------------------------------------------------------------");
                 Console.Write("bebop: ");
 
-                string cmd = null;
+                char cmd;
 
                 if (running)
                 {
                     Thread.Sleep(1);
-                    cmd = "s";
+                    cmd = 's';
                 }
                 else
                 {
-                    cmd = Console.ReadLine();
+                    cmd = Console.ReadKey().KeyChar;
                 }
 
-                if (cmd != null)
+                switch (cmd)
                 {
-                    string[] parts = cmd.Split(' ');
-
-                    if (parts[0] == "q")
-                    {
+                    case 'q':
                         Console.WriteLine("bye!");
                         return;
-                    }
-                    else if (parts[0] == "=")
-                    {
-                        ram[int.Parse(parts[1])] = byte.Parse(parts[2]);
-                    }
-                    else if (parts[0] == "r")
-                    {
+
+                    case '=':
+                        //this don't work now
+                        break;
+
+                    case 'r':
                         running = true;
-                    }
-                    else if (parts[0] == "!")
-                    {
+                        break;
+                    case '!':
                         running = false;
                         accumulator = 0;
                         programCounter = 0;
                         instructionRegister = 0;
-                    }
-                    else if (parts[0] == "s")
-                    {
+                        break;
+                    case 's':
+
                         instructionRegister = ram[programCounter];
 
                         if (instructionRegister == 0x00)
                         {
-                            //NOP (IMPLIED)                            
+                            //NOP 
+                            //(IMPLIED)                            
                             programCounter += 1;
                         }
                         else if (instructionRegister == 0x01)
                         {
-                            //HLT (IMPLIED)                            
+                            //HLT
+                            //(IMPLIED)                            
                             running = false;
+                        }
+                        else if (instructionRegister == 0x90)
+                        {
+                            //LDA $FF 
+                            //(IMMEDIATE)
+                            //load the accumulator with the value in ram with the next byte after the opcode
+                            byte operand = ram[programCounter + 1];
+
+                            accumulator = operand;
+
+                            programCounter += 2;
                         }
                         else if (instructionRegister == 0x91)
                         {
-                            //LDA (ABSOLUTE)
-                            //load the accumulator with the value in ram at the location pointed to be the next two bytes after the opcode
+                            //LDA [$FFFF]
+                            //(ABSOLUTE)
+                            //load the accumulator with the value in ram at the location pointed to in the next two bytes after the opcode
                             byte high = ram[programCounter + 1];
                             byte low = ram[programCounter + 2];
 
@@ -122,9 +134,11 @@ namespace CmdBop
 
                             programCounter += 3;
                         }
+
                         else if (instructionRegister == 0x80)
                         {
-                            //INCA (IMPLIED)
+                            //INCA 
+                            //(IMPLIED)
                             //increment the accumulator
                             accumulator++;
 
@@ -132,7 +146,8 @@ namespace CmdBop
                         }
                         else if (instructionRegister == 0x99)
                         {
-                            //STA (ABSOLUTE)
+                            //STA [$FFFF] 
+                            //(ABSOLUTE)
                             //store the value in the accumulator into ram at the location pointed to be the next two bytes after the opcode
                             byte high = ram[programCounter + 1];
                             byte low = ram[programCounter + 2];
@@ -145,19 +160,20 @@ namespace CmdBop
                         }
                         else if (instructionRegister == 0x9B)
                         {
-                            //STA (INDIRECT)
+                            //STA [[$FFFF]] 
+                            //(INDIRECT)
                             //store a value in the accumulator into ram at the location pointed to by the location pointed to
                             byte high = ram[programCounter + 1];
                             byte low = ram[programCounter + 2];
-                           
-                            programCounter = low;
-                            
-                            byte higher = ram[programCounter];
-                            byte lower = ram[programCounter + 1];
-                            
+
+                            byte address = low;
+
+                            byte higher = ram[low];
+                            byte lower = ram[low + 1];
+
                             ram[lower] = accumulator;
 
-                            programCounter += 2;
+                            programCounter += 3;
                         }
                         else
                         {
@@ -165,15 +181,14 @@ namespace CmdBop
                             quit();
                         }
 
+                        break;
 
-                    }
-                    else
-                    {
+                    default:
+
                         Console.WriteLine("Uknown Command");
-                    }
+                        break;
 
                 }
-
             }
 
 
