@@ -47,7 +47,8 @@ namespace CmdBop
             ram[0x22] = 0x30;
 
             //place where the final result goes    
-            ram[0x30] = 0xFF; 
+            ram[0x30] = 0x00;
+            ram[0x31] = 0x38; 
 
             while (true)
             {
@@ -87,6 +88,13 @@ namespace CmdBop
                     else if (parts[0] == "r")
                     {
                         running = true;
+                    }
+                    else if (parts[0] == "!")
+                    {
+                        running = false;
+                        accumulator = 0;
+                        programCounter = 0;
+                        instructionRegister = 0;
                     }
                     else if (parts[0] == "s")
                     {
@@ -134,6 +142,22 @@ namespace CmdBop
 
 
                             programCounter += 3;
+                        }
+                        else if (instructionRegister == 0x9B)
+                        {
+                            //STA (INDIRECT)
+                            //store a value in the accumulator into ram at the location pointed to by the location pointed to
+                            byte high = ram[programCounter + 1];
+                            byte low = ram[programCounter + 2];
+                           
+                            programCounter = low;
+                            
+                            byte higher = ram[programCounter];
+                            byte lower = ram[programCounter + 1];
+                            
+                            ram[lower] = accumulator;
+
+                            programCounter += 2;
                         }
                         else
                         {
