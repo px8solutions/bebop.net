@@ -134,6 +134,23 @@ namespace CmdBop
 
                             programCounter += 3;
                         }
+                        else if (instructionRegister == 0x93)
+                        {
+                            //LDA [$FFFF]
+                            //(INDIRECT)
+                            //load the accumulator with the value in ram at the location pointed with the location pointed to.
+                            byte high = ram[programCounter + 1];
+                            byte low = ram[programCounter + 2];
+
+                            byte address = low;
+
+                            byte higher = ram[low];
+                            byte lower = ram[low + 1];
+
+                            accumulator = ram[lower];
+
+                            programCounter += 3;
+                        }
 
                         else if (instructionRegister == 0x80)
                         {
