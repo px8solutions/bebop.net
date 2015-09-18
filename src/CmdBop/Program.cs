@@ -17,7 +17,7 @@ namespace CmdBop
 
         static void Main(string[] args)
         {
-            //LDA [$0020]
+            //LDA $0020
             ram[0x00] = 0x91;
             ram[0x01] = 0x00;
             ram[0x02] = 0x20;
@@ -28,8 +28,8 @@ namespace CmdBop
             ram[0x05] = 0x80;
             ram[0x06] = 0x80;
 
-            //STA $0030
-            ram[0x07] = 0x99;
+            //STA [$0021]
+            ram[0x07] = 0x9B;
             ram[0x08] = 0x00;
             ram[0x09] = 0x30;
 
@@ -38,8 +38,16 @@ namespace CmdBop
 
 
             //data
-            ram[0x20] = 0x24;
-            ram[0x30] = 0xFF;
+
+            //contains data to be loaded into accumulator
+            ram[0x20] = 0x24; 
+
+            //contains the address of the final place (0x30)
+            ram[0x21] = 0x00;
+            ram[0x22] = 0x30;
+
+            //place where the final result goes    
+            ram[0x30] = 0xFF; 
 
             while (true)
             {
@@ -55,7 +63,7 @@ namespace CmdBop
 
                 if (running)
                 {
-                    Thread.Sleep(400);
+                    Thread.Sleep(1);
                     cmd = "s";
                 }
                 else
