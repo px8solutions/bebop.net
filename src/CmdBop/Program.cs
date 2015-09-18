@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 
 namespace CmdBop
 {
     class Program
     {
+        static bool running = false;
         static byte accumulator = 0;
         static byte programCounter = 0;
         static byte instructionRegister = 0;
@@ -15,7 +17,7 @@ namespace CmdBop
 
         static void Main(string[] args)
         {
-            //LDA $0020
+            //LDA [$0020]
             ram[0x00] = 0x91;
             ram[0x01] = 0x00;
             ram[0x02] = 0x20;
@@ -31,6 +33,10 @@ namespace CmdBop
             ram[0x08] = 0x00;
             ram[0x09] = 0x30;
 
+            //HLT
+            ram[0x0F] = 0x01;
+
+
             //data
             ram[0x20] = 0x24;
             ram[0x30] = 0xFF;
@@ -45,27 +51,53 @@ namespace CmdBop
                 Console.WriteLine("------------------------------------------------------------------------------");
                 Console.Write("bebop: ");
 
-                string cmd=Console.ReadLine();
+                string cmd = null;
+
+                if (running)
+                {
+                    Thread.Sleep(400);
+                    cmd = "s";
+                }
+                else
+                {
+                    cmd = Console.ReadLine();
+                }
 
                 if (cmd != null)
                 {
                     string[] parts = cmd.Split(' ');
 
-                    if (parts[0] == "quit")
+                    if (parts[0] == "q")
                     {
                         Console.WriteLine("bye!");
                         return;
                     }
-                    else if (parts[0] == "set")
+                    else if (parts[0] == "=")
                     {
                         ram[int.Parse(parts[1])] = byte.Parse(parts[2]);
                     }
-                    else if (parts[0] == "step")
+                    else if (parts[0] == "r")
+                    {
+                        running = true;
+                    }
+                    else if (parts[0] == "s")
                     {
                         instructionRegister = ram[programCounter];
 
-                        if (instructionRegister == 0x91)
+                        if (instructionRegister == 0x00)
                         {
+                            //NOP (IMPLIED)                            
+                            programCounter += 1;
+                        }
+                        else if (instructionRegister == 0x01)
+                        {
+                            //HLT (IMPLIED)                            
+                            running = false;
+                        }
+                        else if (instructionRegister == 0x91)
+                        {
+                            //LDA (ABSOLUTE)
+                            //load the accumulator with the value in ram at the location pointed to be the next two bytes after the opcode
                             byte high = ram[programCounter + 1];
                             byte low = ram[programCounter + 2];
 
@@ -76,12 +108,16 @@ namespace CmdBop
                         }
                         else if (instructionRegister == 0x80)
                         {
+                            //INCA (IMPLIED)
+                            //increment the accumulator
                             accumulator++;
 
                             programCounter++;
                         }
                         else if (instructionRegister == 0x99)
                         {
+                            //STA (ABSOLUTE)
+                            //store the value in the accumulator into ram at the location pointed to be the next two bytes after the opcode
                             byte high = ram[programCounter + 1];
                             byte low = ram[programCounter + 2];
 
@@ -103,7 +139,7 @@ namespace CmdBop
                     {
                         Console.WriteLine("Uknown Command");
                     }
-                
+
                 }
 
             }
@@ -115,20 +151,50 @@ namespace CmdBop
 
         public static void report()
         {
+            Console.Clear();
             Console.WriteLine("------------------------------------------------------------------------------");
-            Console.WriteLine("A:\t" + accumulator.ToString("X2") + "\tPC:\t" + programCounter.ToString("X2") + "\tIR:\t" + instructionRegister.ToString("X2"));
+            Console.WriteLine("\tA: [" + accumulator.ToString("X2") + "]\t\tPC: [" + programCounter.ToString("X2") + "]\tIR:[" + instructionRegister.ToString("X2")+"]");
+            Console.WriteLine("------------------------------------------------------------------------------");
 
             int a = 0;
+
             for (int i = 0; i < 15; ++i)
             {
-                Console.Write("\t\t\t\t\t\t");
+                Console.Write("\t");
+                
                 for (int j = 0; j < 10; ++j)
                 {
-                    Console.Write(ram[a].ToString("X2") + " ");
+
+                    if (a == programCounter)
+                    {
+                        Console.Write(" [");
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+
+                    Console.Write(ram[a].ToString("X2"));
+
+                    if (a == programCounter)
+                    {
+                        Console.Write("] ");
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+
                     a++;
+                
                 }
+
                 Console.WriteLine();
             }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
             
         }
 
