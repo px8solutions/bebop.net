@@ -37,21 +37,21 @@ namespace CmdBop
             _ram[0x0F] = 0x01;
 
             //===========================================================================
-            //DATA
+            //DATA (starts at FF00)
 
             //contains the address of the initial place (0x30)
-            _ram[0x20] = 0x00;
-            _ram[0x21] = 0x30;
+            _ram[0xFF00] = 0x00;
+            _ram[0xFF01] = 0x30;
 
             //contains the address of the final place (0x31)
-            _ram[0x22] = 0x00;
-            _ram[0x23] = 0x31;
+            _ram[0xFF02] = 0x00;
+            _ram[0xFF03] = 0x31;
 
             //place where the initial value can be found
-            _ram[0x30] = 0x24;
+            _ram[0xFF0A] = 0x24;
 
             //place where the final result goes    
-            _ram[0x31] = 0xFF;
+            _ram[0xFF0B] = 0xFF;
 
             while (true)
             {
@@ -222,7 +222,7 @@ namespace CmdBop
 
             int a = 0;
 
-            for (int i = 0; i < 15; ++i)
+            for (int i = 0; i < 9; ++i)
             {
                 Console.Write("\t");
                 
@@ -255,6 +255,45 @@ namespace CmdBop
 
                 Console.WriteLine();
             }
+
+            Console.WriteLine("-------------data----------------");
+
+            a = 0;
+
+            for (int i = 0; i < 4; ++i)
+            {
+                Console.Write("\t");
+
+                for (int j = 0; j < 10; ++j)
+                {
+
+                    if ((0xff00+a) == _programCounter)
+                    {
+                        Console.Write(" [");
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+
+                    Console.Write(_ram[0xFF00+a].ToString("X2"));
+
+                    if ((0xff00 + a) == _programCounter)
+                    {
+                        Console.Write("] ");
+                    }
+                    else
+                    {
+                        Console.Write("  ");
+                    }
+
+                    a++;
+
+                }
+
+                Console.WriteLine();
+            }
+
 
             Console.WriteLine();
             Console.WriteLine();
