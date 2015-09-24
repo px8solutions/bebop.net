@@ -17,7 +17,7 @@ namespace CmdBop
 
         private static void Main(string[] args)
         {
-            //LDA [[$0020]]
+            //LDA [[$FF00]]
             _ram[0x00] = 0x93;
             _ram[0x01] = 0xFF;
             _ram[0x02] = 0x00;
@@ -28,7 +28,7 @@ namespace CmdBop
             _ram[0x05] = 0x80;
             _ram[0x06] = 0x80;
 
-            //STA [[$0021]]
+            //STA [[$FF02]]
             _ram[0x07] = 0x9B;
             _ram[0x08] = 0xFF;
             _ram[0x09] = 0x02;
@@ -129,11 +129,12 @@ namespace CmdBop
                             byte high = _ram[_programCounter + 1];
                             byte low = _ram[_programCounter + 2];
 
+                            
                             ushort temp = high;
                             temp = (ushort) (temp << 8);
-
-                            //todo: this will only work for less than 255
+                            temp = (ushort) (temp + low);
                             _accumulator = (byte) (temp);
+
 
                             _programCounter += 3;
                         }
@@ -145,12 +146,19 @@ namespace CmdBop
                             byte high = _ram[_programCounter + 1];
                             byte low = _ram[_programCounter + 2];
 
-                            byte _trackCounter = _ram[high + 3];
+                            ushort temp = high;
+                            temp = (ushort)(temp << 8);
+                            temp = (ushort)(temp + low);
+
+                            byte high2 = _ram[temp];
+                            byte low2 = _ram[temp+1];
+                            ushort temp2 = high2;
+                            temp2 = (ushort)(temp2 << 8);
+                            temp2 = (ushort)(temp2 + low2);
+                            
+                            _accumulator = (byte)_ram[temp2];
 
                             _programCounter = _ram[_programCounter + 1];
-
-
-
                             _programCounter += 3;
                         }
 
@@ -185,10 +193,17 @@ namespace CmdBop
                             byte high = _ram[_programCounter + 1];
                             byte low = _ram[_programCounter + 2];
 
-                            byte higher = _ram[high];
-                            byte lower = _ram[low];
+                            ushort temp = high;
+                            temp = (ushort)(temp << 8);
+                            temp = (ushort)(temp + low);
+
+                            byte high2 = _ram[temp];
+                            byte low2 = _ram[temp + 1];
+                            ushort temp2 = high2;
+                            temp2 = (ushort)(temp2 << 8);
+                            temp2 = (ushort)(temp2 + low2);
                            
-                            _ram[lower] = _accumulator;
+                            _ram[temp2] = _accumulator;
 
                             _programCounter += 3;
                         }
