@@ -48,7 +48,7 @@
          this.txtEditor.Multiline = true;
          this.txtEditor.Name = "txtEditor";
          this.txtEditor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-         this.txtEditor.Size = new System.Drawing.Size(244, 146);
+         this.txtEditor.Size = new System.Drawing.Size(258, 216);
          this.txtEditor.TabIndex = 0;
          this.txtEditor.WordWrap = false;
          // 
@@ -75,7 +75,7 @@
          // mnuSave
          // 
          this.mnuSave.Name = "mnuSave";
-         this.mnuSave.Size = new System.Drawing.Size(152, 22);
+         this.mnuSave.Size = new System.Drawing.Size(98, 22);
          this.mnuSave.Text = "&Save";
          this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
          // 
@@ -85,7 +85,7 @@
             this.tsbAssemble});
          this.toolStrip1.Location = new System.Drawing.Point(0, 0);
          this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(244, 25);
+         this.toolStrip1.Size = new System.Drawing.Size(258, 25);
          this.toolStrip1.TabIndex = 2;
          this.toolStrip1.Text = "toolStrip1";
          // 
@@ -97,12 +97,13 @@
          this.tsbAssemble.Name = "tsbAssemble";
          this.tsbAssemble.Size = new System.Drawing.Size(62, 22);
          this.tsbAssemble.Text = "Assemble";
+         this.tsbAssemble.Click += new System.EventHandler(this.tsbAssemble_Click);
          // 
          // Editor
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(244, 174);
+         this.ClientSize = new System.Drawing.Size(258, 244);
          this.Controls.Add(this.txtEditor);
          this.Controls.Add(this.toolStrip1);
          this.Controls.Add(this.menuStrip1);

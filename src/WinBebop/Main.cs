@@ -12,6 +12,8 @@ namespace WinBebop
 {
    public partial class Main : Form
    {
+      private Output _frmOutput = new Output();
+
       public Main()
       {
          InitializeComponent();
@@ -20,6 +22,11 @@ namespace WinBebop
          frm.MdiParent = this;
          frm.Open(System.IO.Directory.GetCurrentDirectory()+"\\Test.asm");
          frm.Show();
+
+         _frmOutput.MdiParent = this;
+         _frmOutput.StartPosition = FormStartPosition.Manual;
+         _frmOutput.Show();
+         _frmOutput.Location = new Point(400, 50);
 
          ISA.LDA lda = new ISA.LDA();
          Text = lda.Mnemonic;
@@ -56,6 +63,26 @@ namespace WinBebop
 
             frm.Show();
 
+         }
+      }
+
+      public Output Output
+      {
+         get
+         {
+            return _frmOutput;
+         }
+      }
+
+      private void tsbOutput_Click(object sender, EventArgs e)
+      {
+         if (_frmOutput.Visible)
+         {
+            _frmOutput.Hide();
+         }
+         else
+         {
+            _frmOutput.Show();
          }
       }
    }

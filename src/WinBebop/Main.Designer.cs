@@ -35,6 +35,7 @@
          this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStrip1 = new System.Windows.Forms.ToolStrip();
          this.tsbRAM = new System.Windows.Forms.ToolStripButton();
+         this.tsbOutput = new System.Windows.Forms.ToolStripButton();
          this.menuStrip1.SuspendLayout();
          this.toolStrip1.SuspendLayout();
          this.SuspendLayout();
@@ -45,7 +46,7 @@
             this.mnuFile});
          this.menuStrip1.Location = new System.Drawing.Point(0, 0);
          this.menuStrip1.Name = "menuStrip1";
-         this.menuStrip1.Size = new System.Drawing.Size(688, 24);
+         this.menuStrip1.Size = new System.Drawing.Size(943, 24);
          this.menuStrip1.TabIndex = 1;
          this.menuStrip1.Text = "menuStrip1";
          // 
@@ -61,24 +62,25 @@
          // mnuNew
          // 
          this.mnuNew.Name = "mnuNew";
-         this.mnuNew.Size = new System.Drawing.Size(152, 22);
+         this.mnuNew.Size = new System.Drawing.Size(103, 22);
          this.mnuNew.Text = "&New";
          this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
          // 
          // mnuOpen
          // 
          this.mnuOpen.Name = "mnuOpen";
-         this.mnuOpen.Size = new System.Drawing.Size(152, 22);
+         this.mnuOpen.Size = new System.Drawing.Size(103, 22);
          this.mnuOpen.Text = "&Open";
          this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
          // 
          // toolStrip1
          // 
          this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbRAM});
+            this.tsbRAM,
+            this.tsbOutput});
          this.toolStrip1.Location = new System.Drawing.Point(0, 24);
          this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(688, 25);
+         this.toolStrip1.Size = new System.Drawing.Size(943, 25);
          this.toolStrip1.TabIndex = 2;
          this.toolStrip1.Text = "toolStrip1";
          // 
@@ -92,16 +94,26 @@
          this.tsbRAM.Text = "RAM";
          this.tsbRAM.Click += new System.EventHandler(this.tsbRAM_Click);
          // 
-         // Beboputer
+         // tsbOutput
+         // 
+         this.tsbOutput.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.tsbOutput.Image = ((System.Drawing.Image)(resources.GetObject("tsbOutput.Image")));
+         this.tsbOutput.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.tsbOutput.Name = "tsbOutput";
+         this.tsbOutput.Size = new System.Drawing.Size(49, 22);
+         this.tsbOutput.Text = "Output";
+         this.tsbOutput.Click += new System.EventHandler(this.tsbOutput_Click);
+         // 
+         // Main
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(688, 438);
+         this.ClientSize = new System.Drawing.Size(943, 438);
          this.Controls.Add(this.toolStrip1);
          this.Controls.Add(this.menuStrip1);
          this.IsMdiContainer = true;
          this.MainMenuStrip = this.menuStrip1;
-         this.Name = "Beboputer";
+         this.Name = "Main";
          this.Text = "Beboputer";
          this.menuStrip1.ResumeLayout(false);
          this.menuStrip1.PerformLayout();
@@ -120,5 +132,6 @@
       private System.Windows.Forms.ToolStripMenuItem mnuOpen;
       private System.Windows.Forms.ToolStrip toolStrip1;
       private System.Windows.Forms.ToolStripButton tsbRAM;
+      private System.Windows.Forms.ToolStripButton tsbOutput;
    }
 }

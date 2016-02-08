@@ -3,13 +3,9 @@ using WinBebop.Core;
 
 namespace WinBebop.Asm
 {
-   public abstract class Instruction
+   public abstract class Instruction:Statement
    {
-
-      protected Instruction(Operand operand)
-      {
-         Operand = operand;
-      }
+      public Operand Operand { get; set; }
 
       public virtual void Execute(CPU cpu, RAM ram)
       {
@@ -21,8 +17,6 @@ namespace WinBebop.Asm
       {
 
       }
-
-      public Operand Operand { get; private set; }
 
       public virtual byte Size
       {
@@ -43,6 +37,11 @@ namespace WinBebop.Asm
             return GetType().Name;
          }
       }
-       
+
+      public override string ToString()
+      {
+         return (Label != null ? Label + ": " : "") + "." + Mnemonic + (Operand != null ? ": {" + Operand.ToString() + "}" : "") + (Comment != null ? " # " + Comment : "");
+      }
+
    }
 }

@@ -8,5 +8,12 @@ namespace WinBebop.Core
 {
    public class RAM
    {
+      private byte[] _ram = new byte[ushort.MaxValue];
+
+      public void Reset()
+      {
+         _ram = new byte[ushort.MaxValue];
+      }
+
    }
 }

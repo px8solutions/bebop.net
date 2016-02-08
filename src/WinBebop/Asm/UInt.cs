@@ -45,11 +45,11 @@ namespace WinBebop.Asm
             {
                if (text.Length == 3)
                {
-                  return new U8(Convert.ToByte(text, 16));
+                  return new U8(Convert.ToByte(text.Substring(1,text.Length-1), 16));
                }
                else if (text.Length == 5)
                {
-                  return new U16(Convert.ToUInt16(text, 16));
+                  return new U16(Convert.ToUInt16(text.Substring(1, text.Length - 1), 16));
                }
                else
                {
@@ -60,11 +60,11 @@ namespace WinBebop.Asm
             {
                if (text.Length == 9)
                {
-                  return new U8(Convert.ToByte(text, 2));
+                  return new U8(Convert.ToByte(text.Substring(1, text.Length - 1), 2));
                }
                else if (text.Length == 17)
                {
-                  return new U16(Convert.ToUInt16(text, 2));
+                  return new U16(Convert.ToUInt16(text.Substring(1, text.Length - 1), 2));
                }
                else
                {
@@ -77,5 +77,7 @@ namespace WinBebop.Asm
 
          return null;
       }
+
+
    }
 }

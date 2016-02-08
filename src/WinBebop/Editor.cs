@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinBebop.Asm;
+using WinBebop.Core;
 
 namespace WinBebop
 {
@@ -36,6 +38,17 @@ namespace WinBebop
          {
             w.Write(txtEditor.Text);
          }
+
+      }
+
+      private void tsbAssemble_Click(object sender, EventArgs e)
+      {
+         ((Main)MdiParent).Output.Clear();
+
+         Beboputer.Bebop.Reset();
+
+         Assembler.Assemble(txtEditor.Lines, ((Main)MdiParent).Output);
+
 
       }
    }

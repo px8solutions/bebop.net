@@ -12,5 +12,11 @@ namespace WinBebop.Core
       public ushort IP { get; set; }
       public byte A { get; set; }
 
+      public void Reset()
+      {
+         IP = 0;
+         A = 0;
+      }
+
    }
 }

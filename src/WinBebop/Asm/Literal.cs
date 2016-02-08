@@ -16,5 +16,10 @@ namespace WinBebop.Asm
 
       public UInt Value { get; private set; }
 
+      public override string ToString()
+      {
+         return "Literal: {" + Value.ToString() + "}";
+      }
+
    }
 }

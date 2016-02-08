@@ -20,5 +20,10 @@ namespace WinBebop.Asm
          return _value;
       }
 
+      public override string ToString()
+      {
+         return "U8: {" + _value + "}";
+      }
+
    }
 }

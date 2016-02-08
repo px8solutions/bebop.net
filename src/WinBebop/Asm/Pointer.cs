@@ -20,5 +20,10 @@ namespace WinBebop.Asm
          throw new NotImplementedException("TODO");
       }
 
+      public override string ToString()
+      {
+         return "Pointer: {TODO}";
+      }
+
    }
 }

@@ -108,8 +108,10 @@ namespace WinBebop.Asm
             bool isAddress = false;
             bool isIndirect = false;
             bool isIndexed = false;
-            
-            
+            bool isPreIndexed = false;
+            bool isPostIndexed = false;
+
+
             if (parsed[0] == '[')
             {
                if (parsed[parsed.Length - 1] != ']') throw new InvalidOperationException("can't parse {" + text + "}");
@@ -119,14 +121,33 @@ namespace WinBebop.Asm
 
                if (parsed[0] == '[')
                {
-                  if (parsed[parsed.Length - 1] != ']') throw new InvalidOperationException("can't parse {" + text + "}");
+
                   isIndirect = true;
-                  parsed = parsed.Substring(1, parsed.Length - 2);
+
+                  if (parsed.Substring(parsed.Length - 3, 3) == ",X]")
+                  {
+                     isPreIndexed = true;
+                     parsed = parsed.Substring(1, parsed.Length - 4);
+                  }
+                  else if (parsed.Substring(parsed.Length - 3, 3) == "],X")
+                  {
+                     isPostIndexed = true;
+                     parsed = parsed.Substring(1, parsed.Length - 4);
+                  }
+                  else if (parsed[parsed.Length - 1] == ']')
+                  {
+                     parsed = parsed.Substring(1, parsed.Length - 2);
+                  }
+                  else
+                  {
+                     throw new InvalidOperationException("can't parse {" + text + "}");
+                  }
+
+
                }
 
-               if (parsed.Contains(",X"))
+               if (parsed.Substring(parsed.Length - 2, 2) == ",X")
                {
-                  if (parsed.Substring(parsed.Length - 2, 2) != ",X") throw new InvalidOperationException("can't parse {" + text + "}");
                   isIndexed = true;
                   parsed = parsed.Substring(0, parsed.Length - 2);
                }
@@ -147,6 +168,12 @@ namespace WinBebop.Asm
             else
             {
                ui = UInt.Parse(parsed);
+
+               if (isAddress && ui is U8)
+               {
+                  ui = new U16(((U8)ui).Read());
+               }
+
             }
 
 
@@ -155,26 +182,9 @@ namespace WinBebop.Asm
                //address literal or pointer (label)
                if (isIndirect)
                {
-                  if (isIndexed)
-                  {
-                     //post or pre
-                     if (text.Contains(",X]]"))
-                     {
-                        addressingMode = AddressingModes.IndirectPreIndexed;
-                     }
-                     else if (text.Contains("],X]"))
-                     {
-                        addressingMode = AddressingModes.IndirectPostIndexed;
-                     }
-                     else
-                     {
-                        throw new InvalidOperationException("can't parse {" + text + "}");
-                     }
-                  }
-                  else
-                  {
-                     addressingMode = AddressingModes.Indirect;
-                  }
+                  if (isPreIndexed) addressingMode = AddressingModes.IndirectPreIndexed;
+                  else if (isPostIndexed) addressingMode = AddressingModes.IndirectPostIndexed;
+                  else addressingMode = AddressingModes.Indirect;
                }
                else 
                {
@@ -239,6 +249,12 @@ namespace WinBebop.Asm
          }
 
       }
+
+      public override string ToString()
+      {
+         return Value.ToString() + "{"+ Enum.GetName(typeof(AddressingModes), _addressingMode) + "}";
+      }
+
 
    }
 }
