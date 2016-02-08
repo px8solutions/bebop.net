@@ -57,7 +57,7 @@ namespace WinBebop.Asm
 
          if (Beboputer.Opcodes.ContainsKey(GetOpcodeKey(Mnemonic,AddressingMode)))
          {
-            opcode = string.Format("#{0:X02}", Beboputer.Opcodes[GetOpcodeKey(Mnemonic, AddressingMode)]);
+            opcode = string.Format("${0:X02}", Beboputer.Opcodes[GetOpcodeKey(Mnemonic, AddressingMode)]);
          }
 
          return (Label != null ? Label + ": " : "") + Mnemonic +" ("+opcode+")" + (Operand != null ? ": {" + Operand.ToString() + "}" : "") + (Comment != null ? " # " + Comment : "");

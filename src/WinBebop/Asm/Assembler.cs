@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinBebop.Core;
+using WinBebop.Directives;
 
 namespace WinBebop.Asm
 {
@@ -12,6 +13,8 @@ namespace WinBebop.Asm
       public static void Assemble(string[] lines, IOutput output)
       {
          Beboputer.Bebop.Reset();
+
+         bool errors = false;
 
          for (int i = 0; i < lines.Length; ++i)
          {
@@ -173,12 +176,74 @@ namespace WinBebop.Asm
             }
             catch (Exception ex)
             {
+               errors = true;
                output.Out("ERROR: "+i + ":\t" + ex.Message);
             }
 
          }
 
+         //load
+         ushort address = 0;
+
+         foreach (Line line in Beboputer.Bebop.Lines)
+         {
+            if (line is ORG)
+            {
+               address = ((U16)((ORG)line).Value).Read();
+            }
+            else if (line is Instruction)
+            {
+               Instruction ins = (Instruction)line;
+
+               byte opcode;
+               if (Beboputer.Opcodes.ContainsKey(Instruction.GetOpcodeKey(ins.Mnemonic, ins.AddressingMode)))
+               {
+                  opcode = Beboputer.Opcodes[Instruction.GetOpcodeKey(ins.Mnemonic, ins.AddressingMode)];
+               }
+               else
+               {
+                  throw new InvalidOperationException("no opcode for {"+ins.ToString()+"}");
+               }
+
+               Beboputer.Bebop.RAM.Write(address, opcode);
+               ++address;
+
+               if (ins.Operand!=null)
+               {
+                  if (ins.Operand.Value is Literal)
+                  {
+                     Literal l = (Literal)ins.Operand.Value;
+
+                     if (l.Value is U8)
+                     {
+                        Beboputer.Bebop.RAM.Write(address, ((U8)l.Value).Read());
+                        ++address;
+                     }
+                     else if (l.Value is U16)
+                     {
+                        ushort v = ((U16)l.Value).Read();
+                        Beboputer.Bebop.RAM.Write(address, (byte)((v & 0xFF00)>>8));
+                        ++address;
+                        Beboputer.Bebop.RAM.Write(address, (byte)(v & 0xFF));
+                        ++address;
+                     }
+                  }
+                  else
+                  {
+                     throw new NotImplementedException("not yet");
+                  }
+
+               }
+
+            }
+         }
+
+         //refresh windows
+         Beboputer.Bebop.Load();
+
+
       }
+
 
    }
 }

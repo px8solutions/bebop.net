@@ -22,7 +22,7 @@ namespace WinBebop.Asm
 
       public override string ToString()
       {
-         return "U16: {" + _value + "}";
+         return "U16: {" + string.Format("${0:X02}",_value) + "}";
       }
 
    }

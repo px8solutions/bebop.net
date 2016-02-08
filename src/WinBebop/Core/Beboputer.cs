@@ -84,6 +84,15 @@ namespace WinBebop.Core
          Labels.Clear();
       }
 
+      public delegate void LoadedEventHandler();
+
+      public event LoadedEventHandler Loaded;
+
+      public void Load()
+      {
+         if (Loaded != null) Loaded();
+      }
+
       public void Stop()
       {
 

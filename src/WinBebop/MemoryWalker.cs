@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WinBebop.Core;
 
 namespace WinBebop
 {
    public partial class MemoryWalker : Form
    {
-      private int _start = 0;
+      private ushort _start = 0;
       private int _cW = 50;
 
       int _nX = 1;
@@ -15,7 +16,12 @@ namespace WinBebop
       public MemoryWalker()
       {
          InitializeComponent();
+         Beboputer.Bebop.Loaded += Bebop_Loaded;
+      }
 
+      private void Bebop_Loaded()
+      {
+         panel1.Invalidate();
       }
 
       private void MemoryWalker_Load(object sender, EventArgs e)
@@ -49,7 +55,7 @@ namespace WinBebop
 
       private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
       {
-         _start = e.NewValue;
+         _start = (ushort)e.NewValue;
          panel1.Invalidate();
       }
 
@@ -61,19 +67,30 @@ namespace WinBebop
 
       private void panel1_Paint(object sender, PaintEventArgs e)
       {
-         e.Graphics.Clear(Color.Red);
+         e.Graphics.Clear(Color.White);
+
+         Font af= new Font(FontFamily.GenericMonospace, 10.0F);
+         Font df = new Font(FontFamily.GenericMonospace, 12.0F, FontStyle.Bold);
 
          int nX = Width / _cW;
          int nY = Height / _cW;
 
-         int address = _start;
+         ushort address = _start;
 
          for (int i = 0; i < nY; ++i)
          {
             for (int j = 0; j < nX; ++j)
             {
                e.Graphics.DrawRectangle(Pens.Black, j * _cW, i * _cW, _cW, _cW);
-               e.Graphics.DrawString(address.ToString(), DefaultFont, Brushes.Black, j * _cW, i * _cW);
+
+               if (Beboputer.Bebop.RAM.HasValue(address))
+               {
+                  e.Graphics.FillRectangle(Brushes.Gray, j * _cW+1, i * _cW+1, _cW-2, _cW-2);
+                  e.Graphics.DrawString(string.Format("${0:X02}",Beboputer.Bebop.RAM.Read(address)), df, Brushes.Black, j * _cW+10, i * _cW+20);
+               }
+
+               e.Graphics.DrawString(string.Format("${0:X02}",address), af, Brushes.Black, j * _cW, i * _cW);
+
                ++address;
             }
          }
