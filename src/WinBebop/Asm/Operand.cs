@@ -11,6 +11,14 @@ namespace WinBebop.Asm
       private AddressingModes _addressingMode;
       private Value _value;
 
+      public AddressingModes AddressingMode
+      {
+         get
+         {
+            return _addressingMode;
+         }
+      }
+
       public Operand()
       {
          _addressingMode = AddressingModes.Implied;

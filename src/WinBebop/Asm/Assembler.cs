@@ -34,6 +34,7 @@ namespace WinBebop.Asm
                if (parts.Length>0 && parts[0].Length > 0)
                {
 
+                  //label
                   if (char.IsLetter(parts[p][0]) || parts[p][0] == '_')
                   {
                      if (parts[p][parts[p].Length - 1] == ':')
@@ -43,7 +44,7 @@ namespace WinBebop.Asm
                      }
                   }
 
-                  if (parts[p][0] == '.')
+                  if (parts[p][0] == '.') //directive
                   {
                      if (parts[p].Length == 1) throw new InvalidOperationException("can't parse line " + i + " {" + lines[i] + "}");
                      string dir = parts[p].Substring(1, parts[p].Length - 1);
@@ -79,7 +80,7 @@ namespace WinBebop.Asm
                      }
 
                   }
-                  else if (Beboputer.Instructions.ContainsKey(parts[p]))
+                  else if (Beboputer.Instructions.ContainsKey(parts[p])) //instruction
                   {
                      string ins = parts[p];
                      ++p;
@@ -105,7 +106,7 @@ namespace WinBebop.Asm
                      line = instruction;
 
                   }
-                  else if (parts[p][0] != '#')
+                  else if (parts[p][0] == '#') //comment only line
                   {
                      //this is okay
                   }
@@ -126,6 +127,10 @@ namespace WinBebop.Asm
                            if (comment != "") comment += " ";
                            comment += parts[j];
                         }
+                     }
+                     else
+                     {
+                        throw new InvalidOperationException("unknown syntax line " + i + " {" + lines[i] + "}");
                      }
                   }
                }
@@ -149,6 +154,13 @@ namespace WinBebop.Asm
                {
                   ((Statement)line).Label = label;
                   ((Statement)line).Comment = comment;
+
+                  if (label!=null)
+                  {
+                     if (Beboputer.Bebop.Labels.ContainsKey(label)) throw new InvalidOperationException("label {"+label+"} already exists line " + i + " {" + lines[i] + "}");
+                     Beboputer.Bebop.Labels.Add(label, (Statement)line);
+                  }
+
                }
                else
                {
@@ -161,7 +173,7 @@ namespace WinBebop.Asm
             }
             catch (Exception ex)
             {
-               output.Out(i + ":\t" + ex.Message);
+               output.Out("ERROR: "+i + ":\t" + ex.Message);
             }
 
          }

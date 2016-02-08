@@ -67,6 +67,8 @@
     <Compile Include="Directives\END.cs" />
     <Compile Include="Directives\EQU.cs" />
     <Compile Include="Directives\ORG.cs" />
+    <Compile Include="ISA\HALT.cs" />
+    <Compile Include="ISA\INCA.cs" />
     <Compile Include="Output.cs">
       <SubType>Form</SubType>
     </Compile>

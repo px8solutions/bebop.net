@@ -38,9 +38,29 @@ namespace WinBebop.Asm
          }
       }
 
+      public static string GetOpcodeKey(string mnemonic, AddressingModes addressingMode)
+      {
+         return mnemonic + "_" + Enum.GetName(typeof(AddressingModes), addressingMode);
+      }
+
+      public AddressingModes AddressingMode
+      {
+         get
+         {
+            return Operand != null ? Operand.AddressingMode : AddressingModes.Implied;
+         }
+      }
+
       public override string ToString()
       {
-         return (Label != null ? Label + ": " : "") + "." + Mnemonic + (Operand != null ? ": {" + Operand.ToString() + "}" : "") + (Comment != null ? " # " + Comment : "");
+         string opcode = "???";
+
+         if (Beboputer.Opcodes.ContainsKey(GetOpcodeKey(Mnemonic,AddressingMode)))
+         {
+            opcode = string.Format("#{0:X02}", Beboputer.Opcodes[GetOpcodeKey(Mnemonic, AddressingMode)]);
+         }
+
+         return (Label != null ? Label + ": " : "") + Mnemonic +" ("+opcode+")" + (Operand != null ? ": {" + Operand.ToString() + "}" : "") + (Comment != null ? " # " + Comment : "");
       }
 
    }

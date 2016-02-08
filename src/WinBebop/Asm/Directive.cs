@@ -25,7 +25,7 @@ namespace WinBebop.Asm
 
       public override string ToString()
       {
-         return (Label!=null?Label+": ":"")+"."+Mnemonic+": {" + Value.ToString() + "}"+ (Comment != null ? " # "+Comment : "");
+         return (Label!=null?Label+": ":"")+"."+Mnemonic+(Value!= null?": {" + Value.ToString() + "}":"")+ (Comment != null ? " # "+Comment : "");
       }
 
    }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WinBebop.Asm;
@@ -17,22 +18,60 @@ namespace WinBebop.Core
       public static Dictionary<string, byte> Opcodes { get; private set; } = new Dictionary<string, byte>();
 
       public List<Line> Lines { get; private set; } = new List<Line>();
-      public Dictionary<string, Label> Labels { get; private set; } = new Dictionary<string, Label>();
-      public Dictionary<string, Constant> Constants { get; private set; } = new Dictionary<string, Constant>();
-      public Dictionary<string, Pointer> Pointers { get; private set; } = new Dictionary<string, Pointer>();
+      public Dictionary<string, Statement> Labels { get; private set; } = new Dictionary<string, Statement>();
 
       public CPU CPU { get; private set; } = new CPU();
       public RAM RAM { get; private set; } = new RAM();
 
 
-       static Beboputer()
+      static Beboputer()
       {
          //find instructions and directives
-         Directives.Add("ORG", typeof(WinBebop.Directives.ORG));
-         Directives.Add("END", typeof(WinBebop.Directives.END));
 
-         Instructions.Add("NOP", typeof(WinBebop.ISA.NOP));
-         Instructions.Add("LDA", typeof(WinBebop.ISA.LDA));
+         List<Type> directives = Assembly.GetAssembly(typeof(Directive)).GetTypes().Where(type => type.IsSubclassOf(typeof(Directive))).ToList<Type>();
+         foreach (Type directive in directives)
+         {
+            MnemonicAttribute ma = (MnemonicAttribute)Attribute.GetCustomAttribute(directive, typeof(MnemonicAttribute));
+
+            string mnemonic = directive.Name;
+
+            if (ma != null)
+            {
+               mnemonic = ma.Mnemonic;
+            }
+
+            Directives.Add(mnemonic, directive);
+
+         }
+
+         List<Type> instructions = Assembly.GetAssembly(typeof(Instruction)).GetTypes().Where(type => type.IsSubclassOf(typeof(Instruction))).ToList<Type>();
+         foreach (Type instruction in instructions)
+         {
+            MnemonicAttribute ma = (MnemonicAttribute)Attribute.GetCustomAttribute(instruction, typeof(MnemonicAttribute));
+
+            string mnemonic = instruction.Name;
+
+            if (ma != null)
+            {
+               mnemonic = ma.Mnemonic;
+            }
+
+            Instructions.Add(mnemonic, instruction);
+
+            //opcodes
+            OpcodeAttribute[] oas = (OpcodeAttribute[])Attribute.GetCustomAttributes(instruction, typeof(OpcodeAttribute));
+
+            foreach (OpcodeAttribute oa in oas)
+            {
+               string key = mnemonic + "_" + Enum.GetName(typeof(AddressingModes), oa.AddressingMode);
+
+               if (Beboputer.Opcodes.ContainsKey(key)) throw new InvalidOperationException("opcode key {"+key+"} already exists");
+
+               Beboputer.Opcodes.Add(key, oa.Opcode);
+
+            }
+
+         }
 
       }
 
@@ -43,8 +82,6 @@ namespace WinBebop.Core
          RAM.Reset();
          Lines.Clear();
          Labels.Clear();
-         Constants.Clear();
-         Pointers.Clear();
       }
 
       public void Stop()
