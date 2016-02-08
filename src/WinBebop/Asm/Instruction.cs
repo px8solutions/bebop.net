@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WinBebop.Core;
 
-namespace WinBebop.Core
+namespace WinBebop.Asm
 {
    public abstract class Instruction
    {
@@ -31,7 +28,7 @@ namespace WinBebop.Core
       {
          get
          {
-            return (byte) (1 + (Operand != null ? Operand.Size : 0));
+            return (byte) (1 + (Operand != null ? Operand.Value.Size : 0));
          }
       }
       

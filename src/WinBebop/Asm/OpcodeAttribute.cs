@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinBebop.Core
+namespace WinBebop.Asm
 {
    [AttributeUsage(validOn:AttributeTargets.Class, AllowMultiple =true)]
    public class OpcodeAttribute : Attribute

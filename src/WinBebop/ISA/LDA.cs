@@ -1,4 +1,5 @@
 ﻿using WinBebop.Core;
+using WinBebop.Asm;
 
 namespace WinBebop.ISA
 {

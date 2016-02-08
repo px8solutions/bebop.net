@@ -46,7 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\AddressingModes.cs" />
+    <Compile Include="Asm\AddressingModes.cs" />
+    <Compile Include="Asm\Constant.cs" />
+    <Compile Include="Asm\Literal.cs" />
+    <Compile Include="Asm\Pointer.cs" />
+    <Compile Include="Asm\Label.cs" />
+    <Compile Include="Asm\U16.cs" />
+    <Compile Include="Asm\U8.cs" />
+    <Compile Include="Asm\UInt.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,10 +67,10 @@
     <Compile Include="Editor.Designer.cs">
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\Instruction.cs" />
+    <Compile Include="Asm\Instruction.cs" />
     <Compile Include="ISA\LDA.cs" />
-    <Compile Include="Core\MnemonicAttribute.cs" />
-    <Compile Include="Core\OpcodeAttribute.cs" />
+    <Compile Include="Asm\MnemonicAttribute.cs" />
+    <Compile Include="Asm\OpcodeAttribute.cs" />
     <Compile Include="Core\RAM.cs" />
     <Compile Include="MemoryWalker.cs">
       <SubType>Form</SubType>
@@ -71,11 +78,11 @@
     <Compile Include="MemoryWalker.Designer.cs">
       <DependentUpon>MemoryWalker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\Operand.cs" />
+    <Compile Include="Asm\Operand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Core\Value.cs" />
+    <Compile Include="Asm\Value.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,6 +119,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
