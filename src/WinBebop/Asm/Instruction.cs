@@ -38,6 +38,26 @@ namespace WinBebop.Asm
          }
       }
 
+      public virtual byte Opcode
+      {
+         get
+         {
+            OpcodeAttribute[] oas = (OpcodeAttribute[])Attribute.GetCustomAttributes(GetType(), typeof(OpcodeAttribute));
+
+            AddressingModes am = (Operand != null ? Operand.AddressingMode : AddressingModes.Implied);
+
+            foreach (OpcodeAttribute oa in oas)
+            {
+               if (oa.AddressingMode==am)
+               {
+                  return oa.Opcode;
+               }
+            }
+
+            throw new InvalidOperationException("Instruction {"+Mnemonic+"} has no opcode defined for this addressing mode {"+ Enum.GetName(typeof(AddressingModes), am) + "}");
+         }
+      }
+
       public static string GetOpcodeKey(string mnemonic, AddressingModes addressingMode)
       {
          return mnemonic + "_" + Enum.GetName(typeof(AddressingModes), addressingMode);

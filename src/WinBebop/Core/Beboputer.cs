@@ -82,6 +82,7 @@ namespace WinBebop.Core
          RAM.Reset();
          Lines.Clear();
          Labels.Clear();
+         Load();
       }
 
       public delegate void LoadedEventHandler();

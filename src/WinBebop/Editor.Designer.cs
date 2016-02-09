@@ -35,6 +35,7 @@
          this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
          this.toolStrip1 = new System.Windows.Forms.ToolStrip();
          this.tsbAssemble = new System.Windows.Forms.ToolStripButton();
+         this.tsbExecute = new System.Windows.Forms.ToolStripButton();
          this.menuStrip1.SuspendLayout();
          this.toolStrip1.SuspendLayout();
          this.SuspendLayout();
@@ -49,7 +50,7 @@
          this.txtEditor.Multiline = true;
          this.txtEditor.Name = "txtEditor";
          this.txtEditor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-         this.txtEditor.Size = new System.Drawing.Size(258, 216);
+         this.txtEditor.Size = new System.Drawing.Size(376, 216);
          this.txtEditor.TabIndex = 0;
          this.txtEditor.WordWrap = false;
          // 
@@ -83,10 +84,11 @@
          // toolStrip1
          // 
          this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbAssemble});
+            this.tsbAssemble,
+            this.tsbExecute});
          this.toolStrip1.Location = new System.Drawing.Point(0, 0);
          this.toolStrip1.Name = "toolStrip1";
-         this.toolStrip1.Size = new System.Drawing.Size(258, 25);
+         this.toolStrip1.Size = new System.Drawing.Size(376, 25);
          this.toolStrip1.TabIndex = 2;
          this.toolStrip1.Text = "toolStrip1";
          // 
@@ -100,11 +102,22 @@
          this.tsbAssemble.Text = "Assemble";
          this.tsbAssemble.Click += new System.EventHandler(this.tsbAssemble_Click);
          // 
+         // tsbExecute
+         // 
+         this.tsbExecute.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this.tsbExecute.Image = ((System.Drawing.Image)(resources.GetObject("tsbExecute.Image")));
+         this.tsbExecute.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this.tsbExecute.Name = "tsbExecute";
+         this.tsbExecute.Size = new System.Drawing.Size(51, 22);
+         this.tsbExecute.Text = "Execute";
+         this.tsbExecute.ToolTipText = "Execute";
+         this.tsbExecute.Click += new System.EventHandler(this.tsbExecute_Click);
+         // 
          // Editor
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(258, 244);
+         this.ClientSize = new System.Drawing.Size(376, 244);
          this.Controls.Add(this.txtEditor);
          this.Controls.Add(this.toolStrip1);
          this.Controls.Add(this.menuStrip1);
@@ -128,5 +141,6 @@
       private System.Windows.Forms.ToolStripMenuItem mnuSave;
       private System.Windows.Forms.ToolStrip toolStrip1;
       private System.Windows.Forms.ToolStripButton tsbAssemble;
+      private System.Windows.Forms.ToolStripButton tsbExecute;
    }
 }

@@ -15,11 +15,40 @@ namespace WinBebop
    public partial class Editor : Form
    {
       private string _fileName;
+      private string _extension;
 
-      public Editor()
+      public Editor(string extension="")
       {
          InitializeComponent();
+         Extension = extension;
       }
+
+      private string Extension
+      {
+         get
+         {
+            return _extension;
+         }
+
+         set
+         {
+            _extension = value;
+
+            tsbAssemble.Visible = false;
+            tsbExecute.Visible = false;
+
+            if (_extension == ".asm")
+            {
+               tsbAssemble.Visible = true;
+            }
+            else if (_extension == ".js")
+            {
+               tsbExecute.Visible = true;
+            }
+
+         }
+      }
+
 
       public void Open(string fileName)
       {
@@ -28,6 +57,8 @@ namespace WinBebop
             txtEditor.Text=r.ReadToEnd();
             Text = System.IO.Path.GetFileName(fileName);
             _fileName = fileName;
+
+            Extension = System.IO.Path.GetExtension(_fileName);
          }
 
       }
@@ -43,13 +74,28 @@ namespace WinBebop
 
       private void tsbAssemble_Click(object sender, EventArgs e)
       {
+         Assemble();
+      }
+
+      public void Assemble()
+      {
          ((Main)MdiParent).Output.Clear();
 
          Beboputer.Bebop.Reset();
 
          Assembler.Assemble(txtEditor.Lines, ((Main)MdiParent).Output);
+      }
 
-
+      private void tsbExecute_Click(object sender, EventArgs e)
+      {
+         try
+         {
+            ((Main)MdiParent).JsEngine.Execute(txtEditor.Text);
+         }
+         catch(Exception ex)
+         {
+            MessageBox.Show(ex.Message);
+         }
       }
    }
 }

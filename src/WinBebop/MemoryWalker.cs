@@ -97,6 +97,12 @@ namespace WinBebop
 
       }
 
+      public void ScrollTo(int address)
+      {
+         vScrollBar1.Value = address;
+         _start = (ushort)address;
+         panel1.Invalidate();
+      }
 
    }
 }
